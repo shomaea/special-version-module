@@ -276,8 +276,8 @@ class SpecialVersion {
     this.init(customCss? customCss : specialVerCss,serviceList,lngSettings,switchButtonElement);
   }
   init(specialVerCss,serviceList,lngSettings,switchButtonElement){
-    const app = new Application(specialVerCss,serviceList,lngSettings,switchButtonElement);
-  };
+    this.app = new Application(specialVerCss,serviceList,lngSettings,switchButtonElement);
+  }
   connectServiceClasses(settings){
     for(let i=0; i<settings.length; i++){
         const item = settings[i];
@@ -311,6 +311,15 @@ class SpecialVersion {
         return null
       }
     }
+  }
+  start() {
+    this.app.start();
+  }
+  stop() {
+    this.app.reset();
+  }
+  rebuild() {
+    this.app.rebuild()
   }
 }
 

@@ -14,15 +14,8 @@ export default class Application {
         for(let i = 0; i<specialVersionButton.length; i++){
             specialVersionButton[i].addEventListener('click',()=>{
                 document.body.classList.add('special-version-loading');
-                if(!this.nodes){
-                    Helper.getNodes().then(nodes => {
-                        this.nodes = nodes;
-                        this.start();
-                    });
-                } else {
-                    this.ready = false;
-                    this.start();
-                }
+                this.ready = false;
+                this.start();
             },false);
         }
         if(specialVersion){
@@ -34,14 +27,26 @@ export default class Application {
         }
     }
     start(){
-      this.initServices();
-      if(!this.uiBlock){
-        this.init();
+      this.ready = false;
+      Helper.getNodes().then(nodes => {
+        this.nodes = nodes;
+        this.initServices();
+          if(!this.uiBlock){
+            this.init();
+          }
+          document.body.classList.remove('special-version-loading');
+          try{
+            this.services['textReadService'].playText(this.lng.specialVersionOn);
+          } catch (e) {}
+      });
+    }
+    rebuild() {
+      const specialVersion = window.localStorage.getItem('specialVersion');
+      if(specialVersion){
+        this.reset();
+        document.body.classList.add('special-version-loading');
+        this.start();
       }
-      document.body.classList.remove('special-version-loading');
-      try{
-        this.services['textReadService'].playText(this.lng.specialVersionOn);
-      } catch (e) {}
     }
     initServices(){
         window.localStorage.setItem('specialVersion','on');
